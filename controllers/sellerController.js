@@ -31,7 +31,7 @@ const sellerRegisteration = async (req, res) => {
            
             secure: true,
             sameSite:'None',
-            path: '/',
+          
           
         };
         res.cookie("token", token,cookieParams);
@@ -79,7 +79,7 @@ const sellerLogin = async (req, res) => {
            
             secure: true,
             sameSite:'None',
-            path: '/',
+           
           
         };
         res.cookie("token", token,cookieParams);
