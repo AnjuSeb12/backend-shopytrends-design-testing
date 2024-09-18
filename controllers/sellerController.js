@@ -14,7 +14,7 @@ const sellerRegisteration = async (req, res) => {
             firstName,
             lastName,
             email,
-            role: 'seller',
+            role: 'admin',
             password: hashedPass
 
         });
