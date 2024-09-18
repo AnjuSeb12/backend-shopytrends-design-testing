@@ -27,7 +27,14 @@ const sellerRegisteration = async (req, res) => {
             })
         }
         const token = sellerToken(seller);
-        res.cookie("token", token);
+        const cookieParams = {
+           
+            secure: true,
+            sameSite:'None',
+            path: '/',
+          
+        };
+        res.cookie("token", token,cookieParams);
         const successMessage = seller.role === 'admin' ? "Admin Registration Successfully Completed!!" : "Seller Registration Successfully Completed!!";
         res.status(201).json({
             success: true,
@@ -68,7 +75,14 @@ const sellerLogin = async (req, res) => {
             });
         }
         const token = sellerToken(seller);
-        res.cookie("token", token);
+        const cookieParams = {
+           
+            secure: true,
+            sameSite:'None',
+            path: '/',
+          
+        };
+        res.cookie("token", token,cookieParams);
         res.status(201).json({
             success: true,
             message: "Loged in Successfully!",
