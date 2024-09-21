@@ -309,7 +309,7 @@ export const getSellerOrders = async (req, res) => {
     try {
         const sellerId = req.user.id;
          // Assuming the seller's ID is stored in req.user
-        const products = await Product.find({ seller: sellerId }).select('seller');
+        const products = await Product.find({ seller: sellerId });
 
         if (!products.length) {
             return res.status(404).json({ message: "No products found for this seller." });
