@@ -31,6 +31,7 @@ const sellerRegisteration = async (req, res) => {
            
             secure: true,
             sameSite:'None',
+            path: '/',
           
           
         };
@@ -79,6 +80,7 @@ const sellerLogin = async (req, res) => {
            
             secure: true,
             sameSite:'None',
+            path: '/',
            
           
         };
@@ -243,9 +245,17 @@ const updateSellerProfile = async (req, res) => {
         res.status(500).json({ success: false, message: "Server error" });
     }
 };
+
+
 const sellerLogout = async (req, res, next) => {
     try {
-        res.clearCookie("token");
+        res.clearCookie("token",{
+            secure: true,
+            sameSite:'None',
+            path: '/',
+           
+
+        });
 
         res.json({ success: true, message: "seller logout successfully",isAuthenticated:false });
     } catch (error) {

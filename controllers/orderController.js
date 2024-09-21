@@ -125,37 +125,7 @@ export const verifyPayment = async (req, res) => {
     }
 };
 
-//correct code
-// export const cancelOrder = async (req, res) => {
-//     try {
-//         console.log("hitted")
-//         console.log(req.user.id)
-//         const userId = req.user.id;
-//         console.log(req.params.orderId)
-//         const orderId = req.params.orderId;
-//         if (!orderId || !userId) {
-//             return res.status(400).json({ error: 'Invalid orderId or userId' });
-//         }
 
-//         const order = await Order.findOne({ _id: orderId, user: userId });
-//         console.log('Order found:', order);
-
-//         if (order) {
-//             order.paymentStatus = 'Canceled';
-//             await order.save();
-
-
-//             res.json({ message: 'Order canceled successfully' });
-//         } else {
-//             res.status(404).json({ error: 'Order not found or not authorized to cancel this order' });
-//         }
-//     } catch (error) {
-//         res.status(500).json({ error: 'Error canceling order' });
-//     }
-// };
-// orderController.js
-
-;
 
 export const cancelOrder = async (req, res) => {
     try {
@@ -334,6 +304,34 @@ export const orderDelete = async (req, res) => {
         res.status(500).json({ error: 'Error deleting order' });
     }
 };
+// Assuming you're using Express and have access to the User and Product models
+export const getSellerOrders = async (req, res) => {
+    try {
+        const sellerId = req.user.id; // Assuming the seller's ID is stored in req.user
+        const products = await Product.find({ sellerId: sellerId }).select('_id');
+
+        if (!products.length) {
+            return res.status(404).json({ message: "No products found for this seller." });
+        }
+
+        const orders = await Order.find({ "orderItems.productId": { $in: products } })
+            .populate('user', 'firstName lastName email')
+            .populate({
+                path: 'orderItems.productId',
+                select: 'title image',
+            });
+
+        if (!orders.length) {
+            return res.status(404).json({ message: "No orders found for your products." });
+        }
+
+        res.status(200).json({ success: true, orders });
+    } catch (error) {
+        console.error("Error fetching seller orders:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
 
 
 
