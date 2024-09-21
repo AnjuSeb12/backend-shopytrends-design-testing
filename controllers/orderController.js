@@ -307,8 +307,9 @@ export const orderDelete = async (req, res) => {
 // Assuming you're using Express and have access to the User and Product models
 export const getSellerOrders = async (req, res) => {
     try {
-        const sellerId = req.user.id; // Assuming the seller's ID is stored in req.user
-        const products = await Product.find({ sellerId: sellerId }).select('_id');
+        const sellerId = req.user.id;
+         // Assuming the seller's ID is stored in req.user
+        const products = await Product.find({ seller: sellerId }).select('_id');
 
         if (!products.length) {
             return res.status(404).json({ message: "No products found for this seller." });
