@@ -305,10 +305,36 @@ export const orderDelete = async (req, res) => {
     }
 };
 // Assuming you're using Express and have access to the User and Product models
+// export const getSellerOrders = async (req, res) => {
+//     try {
+//         const sellerId = req.user.id;
+//          // Assuming the seller's ID is stored in req.user
+//         const products = await Product.find({ seller: sellerId }).select('_id');
+
+//         if (!products.length) {
+//             return res.status(404).json({ message: "No products found for this seller." });
+//         }
+
+//         const orders = await Order.find({ "orderItems.productId": { $in: products } })
+//             .populate('user', 'firstName lastName email')
+//             .populate({
+//                 path: 'orderItems.productId',
+//                 select: 'title image',
+//             });
+
+//         if (!orders.length) {
+//             return res.status(404).json({ message: "No orders found for your products." });
+//         }
+
+//         res.status(200).json({ success: true, orders });
+//     } catch (error) {
+//         console.error("Error fetching seller orders:", error);
+//         res.status(500).json({ message: "Internal Server Error" });
+//     }
+// };
 export const getSellerOrders = async (req, res) => {
     try {
-        const sellerId = req.user.id;
-         // Assuming the seller's ID is stored in req.user
+        const sellerId = req.user.id; // Assuming the seller's ID is stored in req.user
         const products = await Product.find({ seller: sellerId }).select('_id');
 
         if (!products.length) {
@@ -326,7 +352,17 @@ export const getSellerOrders = async (req, res) => {
             return res.status(404).json({ message: "No orders found for your products." });
         }
 
-        res.status(200).json({ success: true, orders });
+        // You might want to select specific fields or structure the response
+        const ordersWithShipping = orders.map(order => ({
+            orderId: order._id,
+            user: order.user,
+            orderItems: order.orderItems,
+            shippingAddress: order.shippingAddress,
+            paymentStatus: order.paymentStatus,
+            createdAt: order.createdAt,
+        }));
+
+        res.status(200).json({ success: true, orders: ordersWithShipping });
     } catch (error) {
         console.error("Error fetching seller orders:", error);
         res.status(500).json({ message: "Internal Server Error" });
