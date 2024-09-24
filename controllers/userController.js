@@ -214,15 +214,38 @@ const updateUserProfile = async (req, res) => {
         res.status(500).json({ success: false, message: "Server error" });
     }
 };
+// const userLogout = async (req, res, next) => {
+//     try {
+//         res.clearCookie("token");
+
+//         res.json({ success: true, message: "user logout successfully",isAuthenticated:false });
+//     } catch (error) {
+//         res.status(error.status || 500).json({ message: error.message || "Internal server error" });
+//     }
+// };
+
 const userLogout = async (req, res, next) => {
     try {
-        res.clearCookie("token");
+        // Clear the token cookie
+        res.clearCookie("token", {
+            httpOnly: true,   // Ensure this matches how the token was set
+            secure: process.env.NODE_ENV === 'production', // Use secure in production
+            sameSite: 'Strict',  // Ensure the sameSite policy matches your setup
+        });
 
-        res.json({ success: true, message: "user logout successfully",isAuthenticated:false });
+        // Respond with success message
+        res.status(200).json({ 
+            success: true, 
+            message: "User logged out successfully", 
+            isAuthenticated: false 
+        });
     } catch (error) {
-        res.status(error.status || 500).json({ message: error.message || "Internal server error" });
+        res.status(error.status || 500).json({ 
+            message: error.message || "Internal server error" 
+        });
     }
 };
+
 // In your user controller
 
 
