@@ -228,9 +228,9 @@ const userLogout = async (req, res, next) => {
     try {
         // Clear the token cookie
         res.clearCookie("token", {
-            httpOnly: true,   // Ensure this matches how the token was set
-            secure: process.env.NODE_ENV === 'production', // Use secure in production
-            sameSite: 'Strict',  // Ensure the sameSite policy matches your setup
+            secure: true,
+            sameSite:'None',
+            path: '/',
         });
 
         // Respond with success message
